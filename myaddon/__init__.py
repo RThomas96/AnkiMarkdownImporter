@@ -77,7 +77,7 @@ def generateDatabase() -> pd.DataFrame:
     data = []
     for f in mdfiles:
         markdownFile = "".join(open(f, 'r').readlines())
-        html = markdown.markdown(markdownFile, extensions=['extra', 'smarty', CodeHiliteExtension(noclasses=True)])
+        html = markdown.markdown(markdownFile, extensions=['extra', 'smarty', CodeHiliteExtension(noclasses=True), 'nl2br', 'sane_lists'])
 
         filename, tags, root_tag = extractDataFromPath(f)
 
@@ -88,7 +88,11 @@ def generateDatabase() -> pd.DataFrame:
             html_answer = ""
             nextSib = question.next_sibling
             while nextSib is not None and nextSib.name != 'h5':
-                html_answer += str(nextSib)
+                text = str(nextSib)
+                if nextSib.name == 'p':
+                    text = text.replace("![[", '<br><img src="')
+                    text = text.replace("]]", '"><br>')
+                html_answer += text
                 nextSib = nextSib.next_sibling
             html_question = str(question).replace("<h5>", "").replace("</h5>", "")
             html_question_without_tags, custom_tags = extract_tags(html_question)
