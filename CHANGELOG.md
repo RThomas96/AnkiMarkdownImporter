@@ -8,4 +8,4 @@
 - Consistant Html parsing using `BeautifulSoup`
 - Code highlight using `CodeHiliteExtension`
 
-[0.1.0]: https://github.com/RThomas96/AnkiMarkdownImporter/releases/v1.0.1-alpha
+[0.1.0]: https://github.com/RThomas96/AnkiMarkdownImporter/releases/tag/v0.1.0-alpha
