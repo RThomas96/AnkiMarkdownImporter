@@ -4,17 +4,17 @@ from os import listdir
 from os.path import join, isfile, dirname, abspath
 import sys
 import pathlib
+import warnings
+
 sys.path.append(
     str(pathlib.Path(__file__).parent.resolve().parent.resolve().joinpath("venv/lib/python3.9/site-packages")))
 
-from tqdm import tqdm
 import pandas as pd
-import warnings
 
 import markdown
-from bs4 import BeautifulSoup
 from markdown.extensions.codehilite import CodeHiliteExtension
 
+from bs4 import BeautifulSoup
 
 def extract_tags(line):
     words = line.split(" ")
