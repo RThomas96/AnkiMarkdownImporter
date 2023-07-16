@@ -1,0 +1,19 @@
+{
+    "display_name": "Markdown importer",
+    "module_name": "markdown_importer",
+    "repo_name": "markdown-importer",
+    //"ankiweb_id": "TO DO",
+    "author": "RThomas96",
+    //"contact": "https://glutanimate.com",
+    //"homepage": "https://github.com/glutanimate/review-heatmap",
+    //"copyright_start": 2016,
+    //"tags": "stats motivation streak heatmap overview",
+    //"conflicts": [
+    //    "1722241614",
+    //    "723520343"
+    //],
+    //"targets": [
+    //    "anki21"
+    //],
+    //"min_anki_version": "2.1.28"
+}
