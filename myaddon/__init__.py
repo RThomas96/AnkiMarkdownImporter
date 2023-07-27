@@ -30,9 +30,9 @@ def extractDataFromPath(path):
     try:
         fpath = path.split("/")
 
-        filename = fpath[fpath.index("notes") + 2]
+        filename = fpath[fpath.index("cards") + 2]
 
-        noteIndex = fpath.index("notes")
+        noteIndex = fpath.index("cards")
         fpath = fpath[noteIndex + 1:]
         tags = [tag.replace(".md", "").replace(" ", "_") for tag in fpath]
         root_tag = tags[0]
@@ -42,6 +42,7 @@ def extractDataFromPath(path):
 
     except IndexError:
         if not path[-1] == "README.md":
+            print("Error with file: " + path)
             raise IndexError
 
 
@@ -70,7 +71,7 @@ from anki.collection import ImportCsvRequest
 from aqt import mw
 
 def generateDatabase() -> pd.DataFrame:
-    searchPath = "/home/thomas/note/geode/notes"
+    searchPath = "/home/thomas/note/geode/cards"
 
     mdfiles = [str(path.resolve()) for path in pathlib.Path(searchPath).rglob('*.md')]
 
@@ -80,6 +81,8 @@ def generateDatabase() -> pd.DataFrame:
         html = markdown.markdown(markdownFile, extensions=['extra', 'smarty', CodeHiliteExtension(noclasses=True), 'nl2br', 'sane_lists'])
 
         filename, tags, root_tag = extractDataFromPath(f)
+        if filename == "Unsorted":
+            continue
 
         parser = BeautifulSoup(html, 'html.parser')
         for question in parser.find_all('h5'):
@@ -104,6 +107,7 @@ def generateDatabase() -> pd.DataFrame:
     frame['tags'] = [' '.join(map(str, l)) for l in frame['tags']]
 
     convertFilename(frame, ['Git', 'Linux', 'General'], 'General')
+
     return frame
 
 def importCSV(frame) -> None:
