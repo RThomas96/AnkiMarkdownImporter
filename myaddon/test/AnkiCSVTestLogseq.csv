@@ -1,0 +1,32 @@
+<p>Hopla une deuxième carte normalement</p>,"<p>C&rsquo;est une réponse hopla<br />
+Une deuxième ligne.</p>",ToStore,logseq_journal
+<p>Un test de carte avec code nested</p>,"<div class=""codehilite"" style=""background: #f8f8f8""><pre style=""line-height: 125%;""><span></span><code><span style=""color: #3D7B7B; font-style: italic"">// Fibonacci Series using Space Optimized Method</span>
+<span style=""color: #9C6500"">#include</span><span style=""color: #bbbbbb""> </span><span style=""color: #3D7B7B; font-style: italic"">&lt;bits/stdc++.h&gt;</span><span style=""color: #9C6500""></span>
+<span style=""color: #008000; font-weight: bold"">using</span><span style=""color: #bbbbbb""> </span><span style=""color: #008000; font-weight: bold"">namespace</span><span style=""color: #bbbbbb""> </span><span style=""color: #0000FF; font-weight: bold"">std</span>;<span style=""color: #bbbbbb""></span>
+
+<span style=""color: #B00040"">int</span><span style=""color: #bbbbbb""> </span><span style=""color: #0000FF"">fib</span>(<span style=""color: #B00040"">int</span><span style=""color: #bbbbbb""> </span>n)<span style=""color: #bbbbbb""></span>
+{<span style=""color: #bbbbbb""></span>
+<span style=""color: #bbbbbb"">    </span><span style=""color: #B00040"">int</span><span style=""color: #bbbbbb""> </span>a<span style=""color: #bbbbbb""> </span><span style=""color: #666666"">=</span><span style=""color: #bbbbbb""> </span><span style=""color: #666666"">0</span>,<span style=""color: #bbbbbb""> </span>b<span style=""color: #bbbbbb""> </span><span style=""color: #666666"">=</span><span style=""color: #bbbbbb""> </span><span style=""color: #666666"">1</span>,<span style=""color: #bbbbbb""> </span>c,<span style=""color: #bbbbbb""> </span>i;<span style=""color: #bbbbbb""></span>
+<span style=""color: #bbbbbb"">    </span><span style=""color: #008000; font-weight: bold"">if</span><span style=""color: #bbbbbb""> </span>(n<span style=""color: #bbbbbb""> </span><span style=""color: #666666"">==</span><span style=""color: #bbbbbb""> </span><span style=""color: #666666"">0</span>)<span style=""color: #bbbbbb""></span>
+<span style=""color: #bbbbbb"">        </span><span style=""color: #008000; font-weight: bold"">return</span><span style=""color: #bbbbbb""> </span>a;<span style=""color: #bbbbbb""></span>
+<span style=""color: #bbbbbb"">    </span><span style=""color: #008000; font-weight: bold"">for</span><span style=""color: #bbbbbb""> </span>(i<span style=""color: #bbbbbb""> </span><span style=""color: #666666"">=</span><span style=""color: #bbbbbb""> </span><span style=""color: #666666"">2</span>;<span style=""color: #bbbbbb""> </span>i<span style=""color: #bbbbbb""> </span><span style=""color: #666666"">&lt;=</span><span style=""color: #bbbbbb""> </span>n;<span style=""color: #bbbbbb""> </span>i<span style=""color: #666666"">++</span>)<span style=""color: #bbbbbb""> </span>{<span style=""color: #bbbbbb""></span>
+<span style=""color: #bbbbbb"">        </span>c<span style=""color: #bbbbbb""> </span><span style=""color: #666666"">=</span><span style=""color: #bbbbbb""> </span>a<span style=""color: #bbbbbb""> </span><span style=""color: #666666"">+</span><span style=""color: #bbbbbb""> </span>b;<span style=""color: #bbbbbb""></span>
+<span style=""color: #bbbbbb"">        </span>a<span style=""color: #bbbbbb""> </span><span style=""color: #666666"">=</span><span style=""color: #bbbbbb""> </span>b;<span style=""color: #bbbbbb""></span>
+<span style=""color: #bbbbbb"">        </span>b<span style=""color: #bbbbbb""> </span><span style=""color: #666666"">=</span><span style=""color: #bbbbbb""> </span>c;<span style=""color: #bbbbbb""></span>
+<span style=""color: #bbbbbb"">    </span>}<span style=""color: #bbbbbb""></span>
+<span style=""color: #bbbbbb"">    </span><span style=""color: #008000; font-weight: bold"">return</span><span style=""color: #bbbbbb""> </span>b;<span style=""color: #bbbbbb""></span>
+}<span style=""color: #bbbbbb""></span>
+
+<span style=""color: #3D7B7B; font-style: italic"">// Driver code</span>
+<span style=""color: #B00040"">int</span><span style=""color: #bbbbbb""> </span><span style=""color: #0000FF"">main</span>()<span style=""color: #bbbbbb""></span>
+{<span style=""color: #bbbbbb""></span>
+<span style=""color: #bbbbbb"">    </span><span style=""color: #B00040"">int</span><span style=""color: #bbbbbb""> </span>n<span style=""color: #bbbbbb""> </span><span style=""color: #666666"">=</span><span style=""color: #bbbbbb""> </span><span style=""color: #666666"">9</span>;<span style=""color: #bbbbbb""></span>
+
+<span style=""color: #bbbbbb"">    </span>cout<span style=""color: #bbbbbb""> </span><span style=""color: #666666"">&lt;&lt;</span><span style=""color: #bbbbbb""> </span>fib(n);<span style=""color: #bbbbbb""></span>
+<span style=""color: #bbbbbb"">    </span><span style=""color: #008000; font-weight: bold"">return</span><span style=""color: #bbbbbb""> </span><span style=""color: #666666"">0</span>;<span style=""color: #bbbbbb""></span>
+}<span style=""color: #bbbbbb""></span>
+
+<span style=""color: #3D7B7B; font-style: italic"">// This code is contributed by Code_Mech</span>
+</code></pre></div>
+
+<p>Avec du texte après.</p>",ToStore,logseq_journal

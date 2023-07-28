@@ -1,0 +1,12 @@
+<p>Basic question ?</p>,<p>This is an answer.</p>,,singleFile
+<p>Basic question2 ?</p>,"<p>This is an answer.<br />
+With two lines.</p>",,singleFile
+<p>Basic question3 ?</p>,<p>This is an answer.</p>,CustomTag,singleFile
+<p>Basic question4 ?</p>,"<p>This is an answer.</p>
+<div class=""codehilite"" style=""background: #f8f8f8""><pre style=""line-height: 125%;""><span></span><code><span style=""color: #008000; font-weight: bold"">for</span> f <span style=""color: #AA22FF; font-weight: bold"">in</span> files:
+    newCards <span style=""color: #666666"">=</span> parser<span style=""color: #666666"">.</span>parseFile(f)
+    newCards <span style=""color: #666666"">=</span> [Card(card<span style=""color: #666666"">.</span>question, card<span style=""color: #666666"">.</span>answer, card<span style=""color: #666666"">.</span>tags, f) <span style=""color: #008000; font-weight: bold"">for</span> card <span style=""color: #AA22FF; font-weight: bold"">in</span> newCards]
+    cards <span style=""color: #666666"">+=</span> newCards
+</code></pre></div>",,singleFile2
+<p>Basic question5 <code>#include&lt;iostream&gt;</code>?</p>,"<p>This is an answer.<br />
+![[numpy3D.png]]</p>",,singleFile2
