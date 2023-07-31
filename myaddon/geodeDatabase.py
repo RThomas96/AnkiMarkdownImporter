@@ -15,7 +15,6 @@ Typical usage example:
   database = Database()
   database.writeAnkiCSV("path/to/my/file.csv")
 """
-
 import os
 import pandas as pd
 import ntpath
@@ -29,7 +28,19 @@ from card import Card
 from fileParser import FileParser, Format
 
 class Database:
-    def __init__(self, path="/home/thomas/note/geode/cards", format=Format.MDCard):
+    """ Extract cards from a path and write them to various formats."""
+    def __init__(self, path="/home/thomas/note/geode/cards", format=Format.MDGeode):
+        """ Populate `cardDatabase` with the cards extracted from `path`.
+
+        Args:
+            path: The path to a single file or a directory. If path is a directory is passed all files 
+                with `.md` extension are parsed.
+            format: The format needs to be specified because either Logseq Markdown format or plain
+                Markdown have the same extension `.md`.
+
+        Notes:
+            The argument `format` could be deleted with an automatic format detection.
+        """
         parser = FileParser(format)
 
         files = []
@@ -49,13 +60,23 @@ class Database:
             newCards = [Card(card.question, card.answer, card.tags, f) for card in newCards]
             cards += newCards
 
+        self.format = format
         self.cardDatabase = pd.DataFrame(cards, columns=['question', 'answer', 'tags', 'path'])
 
-    def getAnkiDatabase(self, automaticGeodeTags=True):
+    def getAnkiDatabase(self):
+        """ Generate a Pandas frame compatible with Anki i.e with HTML question and answer, nested tags and a deck instead of a path.
+
+        An Anki compatible frame has:
+            - question and answer in HTML.
+            - nested tags with a syntaxe `tag::nested_tag::another_nested_tag`.
+            - a deck name instead of a path.
+        If the original frame was generated from a Geode directory the function will deduce deck name and nested tags from the path using the Geode organisation rules.
+        """
         data = self.cardDatabase.values.tolist()
 
-        if automaticGeodeTags and ("cards" not in data[0][3].split("/")):
-            automaticGeodeTags = False
+        isGeodeDirectory = self.format == Format.MDGeode
+        if isGeodeDirectory and ("cards" not in data[0][3].split("/")):
+            isGeodeDirectory = False
         
         for card in data:
             # HTML conversion
@@ -63,7 +84,7 @@ class Database:
             card[1] = markdown.markdown(card[1], extensions=['extra', 'smarty', CodeHiliteExtension(noclasses=True), 'nl2br', 'sane_lists'])
 
             # Tags that follows the geode organisation
-            if automaticGeodeTags:
+            if isGeodeDirectory:
                 cardPath = card[3].split("/")
 
                 deck = cardPath[cardPath.index("cards") + 2]
@@ -88,11 +109,13 @@ class Database:
         html_database['tags'] = [' '.join(map(str, l)) for l in html_database['tags']]
         return html_database
 
-    def writeAnkiCSV(self, path, automaticGeodeTags=True):
-        database = self.getAnkiDatabase(automaticGeodeTags)
+    def writeCSVAnki(self, path):
+        """Write the cards into a Anki compatible CSV file."""
+        database = self.getAnkiDatabase()
         database.to_csv(path, header=False, index=False)
 
-    def writeMarkdown(self, path):
+    def writeMarkdownGeode(self, path):
+        """Write the cards into a Geode compatible Markdown file."""
         data = self.cardDatabase.values.tolist()
         final = []
 
@@ -105,3 +128,12 @@ class Database:
         f = open(path, 'w')
         f.write("".join(final).strip())
         f.close()
+
+    def write(self, path, format):
+        """Write the cards into the desired format."""
+        if format == Format.MDGeode:
+            self.writeMarkdownGeode(path)
+        elif format == Format.CSVAnki:
+            self.writeCSVAnki(path)
+        else:
+            raise

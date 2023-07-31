@@ -9,7 +9,6 @@ Typical usage example:
   parser = FileParser(Format.Logseq)
   data = parser.parseFile("path/to/my/file.md")
 """
-
 import os
 import re
 from enum import Enum
@@ -17,11 +16,12 @@ from enum import Enum
 from card import Card
 
 class Format(Enum):
-    MDCard = 1
-    CSVCard = 2
-    Logseq = 3
+    MDGeode = 1
+    CSVAnki = 2
+    MDLogseq = 3
 
 class FileParser:
+    """Extract card from a file according to its format"""
     def __init__(self, format):
         self.format = format
 
@@ -30,14 +30,14 @@ class FileParser:
             raise
         with open(path, 'r') as file:
             lines = file.readlines()
-            if self.format == Format.MDCard:
-                return self.parseMDCard(lines)
-            elif self.format == Format.Logseq:
+            if self.format == Format.MDGeode:
+                return self.parseMDGeode(lines)
+            elif self.format == Format.MDLogseq:
                 return self.parseLogSeq(lines)
             else:
                 raise
 
-    def extractTagsFromMarkdownQuestion(self, question_with_tags):
+    def _extractTagsFromMarkdownQuestion(self, question_with_tags):
         # It is possible to '#' in the question if this is code !!
         markerInCode = "`" in question_with_tags
         if markerInCode:
@@ -56,13 +56,13 @@ class FileParser:
         tags = tags[1:]
         return question, tags
 
-    def parseMDCard(self, lines):
+    def parseMDGeode(self, lines):
         lines = re.split('##### ', "".join(lines))
         lines = [w for w in lines if w] #Remove empty strings
         res = []
         for line in lines:
             question_with_tags = line.split('\n', 1)[0]
-            question, tags = self.extractTagsFromMarkdownQuestion(question_with_tags)
+            question, tags = self._extractTagsFromMarkdownQuestion(question_with_tags)
 
             if "Anki" in tags:
                 tags.remove("Anki") 
@@ -80,7 +80,7 @@ class FileParser:
                 line = line.replace("\n", "")
                 line = line.replace("-", "", 1) # First occurence
                 line = line.strip()
-                question, tags = self.extractTagsFromMarkdownQuestion(line)
+                question, tags = self._extractTagsFromMarkdownQuestion(line)
                 tags.remove("Anki")
 
                 inCode = False

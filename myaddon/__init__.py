@@ -1,4 +1,4 @@
-#Conversion
+"""Import cards from a Geode database."""
 
 import sys
 import pathlib
@@ -11,13 +11,11 @@ from geodeDatabase import Database
 from aqt import mw
 from aqt.utils import showInfo, qconnect
 from aqt.qt import *
-
 from anki.collection import ImportCsvRequest
 
 def importCSV(database) -> None:
-
     writePath = "/home/thomas/note/geode/anki/ankiDatabase.csv"
-    database.writeAnkiCSV(writePath)
+    database.write(writePath, Format.CSVAnki)
 
     col = mw.col
     #path = "/home/thomas/PycharmProjects/ankiMarkdownImporter/myaddon/test/AnkiCSVTestGeode.csv"
@@ -31,7 +29,7 @@ def importCSV(database) -> None:
     showInfo("[{}] cards added and [{}] cards updated\n".format(len(list(response.log.new)), len(list(response.log.updated))))
 
 def syncDatabase(database) -> None:
-
+    """Add a tag 'NOT_IN_GEODE' for all cards not found in the Geode database."""
     mdFrame = database.getAnkiDatabase()
     col = mw.col
 
