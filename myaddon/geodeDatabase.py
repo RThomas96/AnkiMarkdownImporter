@@ -1,4 +1,4 @@
-"""Extract and manage data from a file tree organized by the Geode convention.
+""" Extract and manage data from a file tree organized by the Geode convention.
 
 Extract cards from a single Markdown file or a file tree organized by the Geode convention 
 and generate a Pandas dataframe. Cards can be written in various formats like Anki compatible
@@ -41,8 +41,6 @@ class Database:
         Notes:
             The argument `format` could be deleted with an automatic format detection.
         """
-        parser = FileParser(format)
-
         files = []
         if os.path.isfile(path):
             files = [path]
@@ -56,7 +54,7 @@ class Database:
             # WARNING: add this in a configuration file
             if "Unsorted" in f:
                 continue
-            newCards = parser.parseFile(f)
+            newCards = parser.parseFile(f, format)
             newCards = [Card(card.question, card.answer, card.tags, f) for card in newCards]
             cards += newCards
 
@@ -110,12 +108,12 @@ class Database:
         return html_database
 
     def writeCSVAnki(self, path):
-        """Write the cards into a Anki compatible CSV file."""
+        """ Write the cards into a Anki compatible CSV file."""
         database = self.getAnkiDatabase()
         database.to_csv(path, header=False, index=False)
 
     def writeMarkdownGeode(self, path):
-        """Write the cards into a Geode compatible Markdown file."""
+        """ Write the cards into a Geode compatible Markdown file."""
         data = self.cardDatabase.values.tolist()
         final = []
 
@@ -130,7 +128,7 @@ class Database:
         f.close()
 
     def write(self, path, format):
-        """Write the cards into the desired format."""
+        """ Write the cards into the desired format."""
         if format == Format.MDGeode:
             self.writeMarkdownGeode(path)
         elif format == Format.CSVAnki:
