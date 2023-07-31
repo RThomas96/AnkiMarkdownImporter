@@ -86,8 +86,17 @@ def parseLogSeq(lines):
                 if inCode: 
                     answer += lines[numLine+i][codeTabulation:]
                 else:
+                    try:
+                        dashIndex = line.index("-")
+                    except ValueError:
+                        if '```' in line:
+                            dashIndex = originalDashIndex
+                        else:
+                            raise
                     line = line.replace("-", "", 1) # First occurence
                     line = line.strip()
+                    if dashIndex - originalDashIndex > 1: # If we are at indentation level -2, this is a list
+                        line = "- "+line
                     answer += line+"\n"
 
                 # Compare the next line tabulation with the original tabulation

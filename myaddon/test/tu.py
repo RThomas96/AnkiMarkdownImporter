@@ -44,19 +44,23 @@ class DatabaseConstructor(unittest.TestCase):
 
     def test_writeAnkiCSV(self):
         database = geo.Database("files/testFileTree")
-        database.writeAnkiCSV("AnkiCSVTest.csv")
+        database.write("AnkiCSVTest.csv", geo.Format.CSVAnki)
 
     def test_writeAnkiCSV_onGeode(self):
         database = geo.Database()
-        database.writeAnkiCSV("AnkiCSVTestGeode.csv")
+        database.write("AnkiCSVTestGeode.csv", geo.Format.CSVAnki)
 
     def test_parseLogseq(self):
-        database = geo.Database("files/logseq_journal.md", format=geo.Format.Logseq)
-        database.writeAnkiCSV("AnkiCSVTestLogseq.csv")
+        database = geo.Database("files/logseq_journal.md", format=geo.Format.MDLogseq)
+        database.write("AnkiCSVTestLogseq.csv", geo.Format.CSVAnki)
 
     def test_parseLogseqWriteMarkdown(self):
-        database = geo.Database("files/logseq_journal.md", format=geo.Format.Logseq)
-        database.writeMarkdown("TestLogseq.md")
+        database = geo.Database("files/logseq_journal.md", format=geo.Format.MDLogseq)
+        database.write("TestLogseq.md", geo.Format.MDGeode)
+
+    def test_parseLogseqList(self):
+        database = geo.Database("files/logseq_journal_list.md", format=geo.Format.MDLogseq)
+        database.write("TestLogseqLists.md", geo.Format.MDGeode)
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

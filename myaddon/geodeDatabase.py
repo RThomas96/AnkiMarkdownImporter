@@ -25,7 +25,7 @@ import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 
 from card import Card
-from fileParser import FileParser, Format
+from fileParser import Format, parseFile
 
 class Database:
     """ Extract cards from a path and write them to various formats."""
@@ -54,7 +54,7 @@ class Database:
             # WARNING: add this in a configuration file
             if "Unsorted" in f:
                 continue
-            newCards = parser.parseFile(f, format)
+            newCards = parseFile(f, format)
             newCards = [Card(card.question, card.answer, card.tags, f) for card in newCards]
             cards += newCards
 
@@ -124,7 +124,7 @@ class Database:
             final += card[1]
 
         f = open(path, 'w')
-        f.write("".join(final).strip())
+        f.write("".join(final).strip()+'\n')
         f.close()
 
     def write(self, path, format):

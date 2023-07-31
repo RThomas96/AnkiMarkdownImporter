@@ -1,3 +1,8 @@
 ven/
 .idea/
 myaddon/__pycache__
+myaddon/test/*.csv
+myaddon/test/*.md
+myaddon/test/files
+*.swp
+*.swo
