@@ -1,143 +1,36 @@
+"""Extract and manage data from a file tree organized by the Geode convention.
+
+Extract cards from a single Markdown file or a file tree organized by the Geode convention 
+and generate a Pandas dataframe. Cards can be written in various formats like Anki compatible
+CSV format or plain Markdown format.
+Uses `FileParser` to extract cards from each file according to its format.
+
+Handled formats:
+    - Markdown: read/write
+    - Logseq markdown: read
+    - Anki CSV: write
+
+Typical usage example:
+
+  database = Database()
+  database.writeAnkiCSV("path/to/my/file.csv")
+"""
+
 import os
 import pandas as pd
-import re
 import ntpath
 import pathlib
 from collections import namedtuple
-from enum import Enum
 
 import markdown
 from markdown.extensions.codehilite import CodeHiliteExtension
 
-Card = namedtuple("Card", "question answer tags path")
-
-class Format(Enum):
-    MDCard = 1
-    CSVCard = 2
-    Logseq = 3
-
-class fileParser:
-    def __init__(self, format):
-        self.format = format
-
-    def parseFile(self, path):
-        if not os.path.isfile(path):
-            raise
-        with open(path, 'r') as file:
-            lines = file.readlines()
-            if self.format == Format.MDCard:
-                return self.parseMDCard(lines)
-            elif self.format == Format.Logseq:
-                return self.parseLogSeq(lines)
-            else:
-                raise
-
-    def extractTagsFromMarkdownQuestion(self, question_with_tags):
-        # It is possible to '#' in the question if this is code !!
-        markerInCode = "`" in question_with_tags
-        if markerInCode:
-            question_no_code = question_with_tags.split("`")
-            tags = question_no_code[-1].split('#')
-        else:
-            tags = question_with_tags.split('#')
-
-        tags = [t for t in tags if t] #Remove empty strings
-        tags = [t.strip() for t in tags]
-        if not tags:
-            return [], []
-        question = tags[0]
-        if markerInCode:
-            question = "`".join(question_no_code[:-1])+"`"+question
-        tags = tags[1:]
-        return question, tags
-
-    def parseMDCard(self, lines):
-        lines = re.split('##### ', "".join(lines))
-        lines = [w for w in lines if w] #Remove empty strings
-        res = []
-        for line in lines:
-            question_with_tags = line.split('\n', 1)[0]
-            question, tags = self.extractTagsFromMarkdownQuestion(question_with_tags)
-
-            if "Anki" in tags:
-                tags.remove("Anki") 
-                answer = line.split('\n', 1)[1].strip()
-                res.append(Card(question, answer, tags, ""))
-        return res
-
-    def parseLogSeq(self, lines):
-        res = []
-        for numLine, line in enumerate(lines):
-            isAnki = "#Anki" in line
-            if isAnki:
-                originalDashIndex = line.index("-")
-
-                line = line.replace("\n", "")
-                line = line.replace("-", "", 1) # First occurence
-                line = line.strip()
-                question, tags = self.extractTagsFromMarkdownQuestion(line)
-                tags.remove("Anki")
-
-                inCode = False
-                shouldContinue = True
-
-                answer = ""
-                i = 1
-                # BUG: if the question as no answer
-                while shouldContinue:
-                    line = lines[numLine+i]
-
-                    # Check if its a code open/close.
-                    if "```" in line:
-                        try:
-                            codeTabulation = lines[numLine+i].index("-")+2
-                            inCode = True
-                        except ValueError:
-                            # If there is no dash this is the end of a block code
-                            inCode = False
-
-                    # Write the answer by removing the tabulation depending of if its a code block or not.
-                    if inCode: 
-                        answer += lines[numLine+i][codeTabulation:]
-                    else:
-                        line = line.replace("-", "", 1) # First occurence
-                        line = line.strip()
-                        answer += line+"\n"
-
-                    # Compare the next line tabulation with the original tabulation
-                    # If its 0 level, its NOT a block part of the current question
-                    # If its -1 level, its good
-                    # If its -2+ level, its a list
-                    # If no dash and not inCode: BUG
-                    # If no dash and inCode: GOOD
-                    i += 1
-                    if numLine+i >= len(lines):
-                        break
-                    nextLine = lines[numLine+i]
-                    try:
-                        dashIndex = nextLine.index("-")
-                        if dashIndex - originalDashIndex == 0:
-                            shouldContinue = False
-                    except ValueError:
-                        # If there is no dash
-                        if not inCode:
-                            raise
-
-
-                res.append(Card(question, answer, tags, ""))
-                # Code to write in Markdown format
-                # answer = answer.strip().split("\n")
-                # answer = "\n".join(answer)
-                # data.append(question+"\n"+answer+"\n\n")
-        return res
+from card import Card
+from fileParser import FileParser, Format
 
 class Database:
     def __init__(self, path="/home/thomas/note/geode/cards", format=Format.MDCard):
-        data = self.parse(path, format)
-        self.cardDatabase = pd.DataFrame(data, columns=['question', 'answer', 'tags', 'path'])
-
-    def parse(self, path, format):
-        parser = fileParser(format)
+        parser = FileParser(format)
 
         files = []
         if os.path.isfile(path):
@@ -156,7 +49,7 @@ class Database:
             newCards = [Card(card.question, card.answer, card.tags, f) for card in newCards]
             cards += newCards
 
-        return cards
+        self.cardDatabase = pd.DataFrame(cards, columns=['question', 'answer', 'tags', 'path'])
 
     def getAnkiDatabase(self, automaticGeodeTags=True):
         data = self.cardDatabase.values.tolist()
